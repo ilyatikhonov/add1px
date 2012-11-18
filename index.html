@@ -1,0 +1,101 @@
+<html>
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+	<script type="text/javascript">
+		var $col, $row, $currPixel
+
+		function drawPixels(n) {	
+			var colHeight = Math.floor(n/$col.width())
+			var rowLength = n % $col.width()
+
+			$col.css({height: colHeight + 'px'})
+			$row.css({width: rowLength + 'px'})
+		}
+
+		function drawCurrPixel(n) {
+			var top = Math.floor(n/$col.width()) - $currPixelBox.height() + 1
+			var left = n % $col.width() - $currPixelBox.width() + 3
+			$currPixelBox.css({
+				top: top + 'px',
+				left: left + 'px'
+
+			})
+			var currPixelColors = ['black', 'white']
+			var currPixelColor = 0
+			setInterval(function() {
+
+				$currPixel.css('background-color', currPixelColors[currPixelColor])
+				currPixelColor++
+				if (currPixelColor > currPixelColors.length - 1) {
+					currPixelColor = 0
+				}
+			}, 200)
+		}
+
+		$(function() {
+			$col = $('#col')
+			$row = $('#row')
+			$currPixelBox = $('#curr-pixel-container')
+			$currPixel = $('#curr-pixel')
+			var refreshInterval = 1000
+			$.get('/', function(n) {
+				drawPixels(parseInt(n))
+				drawCurrPixel(parseInt(n))
+				setInterval(function() {
+					$.get('/', function(n) {
+						drawPixels(parseInt(n))
+					})
+				}, refreshInterval)
+			})
+			
+			
+			
+		})
+
+	</script>
+	<style>
+		#col, #row-container {
+			width: 660px;
+			margin: 0 auto;
+			position: relative;
+		}
+		#col {
+			margin-top: 60px;
+			background-color: black;
+		}
+		#row {
+			background-color: black;
+			margin-bottom: 60px;
+			height: 1px;
+		}
+		#curr-pixel-container {
+			font-family: monospace;
+			color: gray;
+			width: 160px;
+			height: 20px;
+			position: absolute;
+			z-index: 2;
+		}
+		#curr-pixel {
+			position: absolute;
+			bottom: 0;
+			right: 3px;
+			width: 1px;
+			height: 1px;
+			background-color: red;
+		}
+	</style>
+</head>
+<body>
+	<div id="col">
+		<div id="curr-pixel-container">
+			<span>Here is your pixel &darr;</span>
+			<div id="curr-pixel"></div>
+		</div>
+	</div>
+	<div id="row-container">
+		<div id="row"></div>
+	</div>
+	
+</body>
+</html>
