@@ -2,7 +2,7 @@
 <head>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 	<script type="text/javascript">
-		var $col, $row, $currPixel
+		var $col, $row, $currPixel, $currPixelText
 
 		function drawPixels(n) {	
 			var colHeight = Math.floor(n/$col.width())
@@ -15,6 +15,15 @@
 		function drawCurrPixel(n) {
 			var top = Math.floor(n/$col.width()) - $currPixelBox.height() + 1
 			var left = n % $col.width() - $currPixelBox.width() + 3
+
+			if(left < 0){
+				$currPixelText.html('&darr; Here is your pixel')
+				$currPixelText.css({'margin-left': $currPixelBox.width() - 7})
+			}else{
+				$currPixelText.html('Here is your pixel &darr;')
+				$currPixelText.css({'margin-left':''})
+			}
+
 			$currPixelBox.css({
 				top: top + 'px',
 				left: left + 'px'
@@ -36,6 +45,7 @@
 			$col = $('#col')
 			$row = $('#row')
 			$currPixelBox = $('#curr-pixel-container')
+			$currPixelText = $('#curr-pixel-text')
 			$currPixel = $('#curr-pixel')
 			var refreshInterval = 1000
 			$.get('/', function(n) {
@@ -76,6 +86,10 @@
 			position: absolute;
 			z-index: 2;
 		}
+		#curr-pixel-text{
+			position:absolute;
+			width: 160px;
+		}
 		#curr-pixel {
 			position: absolute;
 			bottom: 0;
@@ -89,7 +103,7 @@
 <body>
 	<div id="col">
 		<div id="curr-pixel-container">
-			<span>Here is your pixel &darr;</span>
+			<span id="curr-pixel-text">Here is your pixel &darr;</span>
 			<div id="curr-pixel"></div>
 		</div>
 	</div>
